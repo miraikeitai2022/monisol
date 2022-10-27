@@ -9,6 +9,17 @@ function initAutocomplete() {
   const searchBox = new google.maps.places.SearchBox(input);
  ////"SearchBoxクラス"はPlacesライブラリのメソッド。引数はinput(ドキュメント上ではinputFieldとある)。
  ////[https://developers.google.com/maps/documentation/javascript/reference/places-widget#SearchBox]
+  
+  var marker = new google.maps.Marker({
+    position: { lat: -33.8688, lng: 151.2195 },
+    map: map
+  });//ピンの表示
+  
+  var circle = new google.maps.Circle({
+    map: map ,
+    center: { lat: -33.8688, lng: 151.2195 },
+    radius: 500,
+  });//座標を中心とした半径500mの円
 
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
   ////"ControlPosition"クラスはコントローラーの位置を定める。
