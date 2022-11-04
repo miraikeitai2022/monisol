@@ -8,8 +8,8 @@ function initAutocomplete()
 
   map = new google.maps.Map(document.getElementById("map"), opts);
 
-  map.addListener('drag', dispLatLng);
-  map.addListener('drag', dispStreetView);
+  map.addListener('dragend', dispLatLng);
+  map.addListener('dragend', dispStreetView);
   
   const input = document.getElementById("pac-input");
   const searchBox = new google.maps.places.SearchBox(input);
