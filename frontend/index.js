@@ -1,14 +1,15 @@
 
 function initAutocomplete()
 {
-  var opts = {
+  var opts = 
+  {
     zoom: 15,
     center: new google.maps.LatLng(35.185384,136.89909)
   };
 
   map = new google.maps.Map(document.getElementById("map"), opts);
 
-  map.addListener('dragend', dispLatLng);
+  //map.addListener('dragend', dispLatLng);
   map.addListener('dragend', dispStreetView);
   
   const input = document.getElementById("pac-input");
@@ -128,17 +129,15 @@ function dispLatLng()
 function dispStreetView()
 {
   var img_element = document.getElementById("streetView");
-  
-  var size = "size=400x400&";
+  var size = "size=800x400&";
   var latlng = map.getCenter();
   var position = "location=" + latlng.lat() + "," + latlng.lng() + "&";
-  var fov = "fov=80&";
+  var fov = "fov=1024&";
   var heading = "heading=170&";
   var pitch = "pitch=40&";
   var key = "key=AIzaSyDFgwp8yQqt3Jtj7rm3tlQzvdP6Kadub8I";
   
   img_element.src = "https://maps.googleapis.com/maps/api/streetview?" + size + position + fov + heading + pitch + key;
-
 }
 // 検索機能
 function callback(results, status) 
@@ -152,6 +151,30 @@ function callback(results, status)
           location: results[0].geometry.location
         }
       });
+      // window.location.href='https://www.google.com/?hl=ja', '_blank'; // 新しいタブを開き、ページを表示
     }
-  }
-  google.maps.event.addDomListener(window, 'load', initialize);
+}
+google.maps.event.addDomListener(window, 'load', initialize);
+
+function dispWeather()
+{
+    var latlng = map.getCenter();
+
+    //リクエスト時のクエリパラメータ
+    const query_params = new URLSearchParams({ 
+      appid: "fdcbd8328e712abdba4fec3e6b9d25a5", 
+      lat: latlng.lat(),
+      lon: latlng.lng(),
+      lang:"ja",
+      //icon:"01d", 
+    });
+
+    //APIリクエスト
+    fetch("https://api.openweathermap.org/data/2.5/weather?" + query_params)
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      console.log(data.weather)
+    })
+}
