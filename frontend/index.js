@@ -1,38 +1,42 @@
 
 function initAutocomplete()
 {
-  var opts = 
+    var opts = 
+    {
+      zoom: 15,
+      center: new google.maps.LatLng(35.185384,136.89909)
+    };
+
+    map = new google.maps.Map(document.getElementById("map"), opts);
+
+    //map.addListener('dragend', dispLatLng);
+    map.addListener('dragend', dispStreetView);
+    
+    const input_start = document.getElementById("start");
+    const searchBox_start = new google.maps.places.SearchBox(input_start);
+    const input_end = document.getElementById("end");
+    const searchBox_end = new google.maps.places.SearchBox(input_end);
+  ////"SearchBoxクラス"はPlacesライブラリのメソッド。引数はinput(ドキュメント上ではinputFieldとある)。
+  ////[https://developers.google.com/maps/documentation/javascript/reference/places-widget#SearchBox]
+    // Search for Google's office in Australia.
+  var request = 
   {
-    zoom: 15,
-    center: new google.maps.LatLng(35.185384,136.89909)
+    location: map.getCenter(),
+    radius: '500',
+    query: 'Google Sydney'
   };
-
-  map = new google.maps.Map(document.getElementById("map"), opts);
-
-  //map.addListener('dragend', dispLatLng);
-  map.addListener('dragend', dispStreetView);
-  
-  const input = document.getElementById("pac-input");
-  const searchBox = new google.maps.places.SearchBox(input);
- ////"SearchBoxクラス"はPlacesライブラリのメソッド。引数はinput(ドキュメント上ではinputFieldとある)。
- ////[https://developers.google.com/maps/documentation/javascript/reference/places-widget#SearchBox]
-   // Search for Google's office in Australia.
-var request = 
-{
-  location: map.getCenter(),
-  radius: '500',
-  query: 'Google Sydney'
-};
 var service = new google.maps.places.PlacesService(map);
   service.textSearch(request, callback);
   
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+  //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input_start);
+  //map.controls[google.maps.ControlPosition.LEFT_TOP].push(input_end);
    ////"ControlPosition"クラスはコントローラーの位置を定める。
     ////https://lab.syncer.jp/Web/API/Google_Maps/JavaScript/ControlPosition/
     ////https://developers.google.com/maps/documentation/javascript/examples/control-positioning
   
-    map.addListener("bounds_changed", () => {
-      searchBox.setBounds(map.getBounds());
+    map.addListener("bounds_changed", () => 
+    {
+      searchBox_start.setBounds(map.getBounds());
     });
     ////"bound_changed"イベントは(見えてる範囲の地図･ビューポートに変化があったときに発火)
     ////https://lab.syncer.jp/Web/API/Google_Maps/JavaScript/Map/bounds_changed/ 
@@ -40,15 +44,17 @@ var service = new google.maps.places.PlacesService(map);
     ////https://lab.syncer.jp/Web/API/Google_Maps/JavaScript/Map/getBounds/
    
     let markers = [];
-    searchBox.addListener("places_changed", () => {
+    searchBox_start.addListener("places_changed", () => 
+    {
       ////"place_chaged"イベントはAutoCompleteクラスのイベント.
       ////https://developers.google.com/maps/documentation/javascript/reference/places-widget#Autocomplete.place_changed
     
-        const places = searchBox.getPlaces();
+        const places = searchBox_start.getPlaces();
         ////"getPlaces"メソッドはクエリ(検索キーワード)を配列(PlaceResult)で返す。
         ////https://developers.google.com/maps/documentation/javascript/reference/places-widget#Autocomplete.place_changed
     
-        if (places.length == 0) {
+        if (places.length == 0) 
+        {
           return;
         }
         // Clear out the old markers.
@@ -112,6 +118,26 @@ var service = new google.maps.places.PlacesService(map);
       });
 }
 
+// ルートを求める
+function calcRoute()
+{    
+  //let start = document.getElementById('start').value;
+  let end = document.getElementById('end').value;
+  let request = 
+  {
+    origin: map.getCenter(),
+    destination: end,
+    travelMode: 'DRIVING'
+  };
+  directionService.route(request, function(result, status)
+  {
+    if (status == 'OK')
+    {
+      directionsRenderer.setDirections(result);
+    }
+  });
+}
+
 function dispLatLng()
 {
     var latlng = map.getCenter();
@@ -142,6 +168,7 @@ function dispStreetView()
 // 検索機能
 function callback(results, status) 
 {
+    // 有効な結果がレスポンスに含まれている（PlacesServiceStatus定数OKがtrue）なら
     if (status == google.maps.places.PlacesServiceStatus.OK) 
     {
       var marker = new google.maps.Marker({
@@ -151,7 +178,6 @@ function callback(results, status)
           location: results[0].geometry.location
         }
       });
-      // window.location.href='https://www.google.com/?hl=ja', '_blank'; // 新しいタブを開き、ページを表示
     }
 }
 google.maps.event.addDomListener(window, 'load', initialize);
