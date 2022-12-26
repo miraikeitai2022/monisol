@@ -12,10 +12,16 @@
   <body>
   <!--ここで指定したidにjavascriptでマップを表示させます。-->
     <input
-      id="pac-input"
+      id="start"
       class="controls"
       type="text"
-      placeholder="Search Box"
+      placeholder="Start"
+    />
+    <input
+      id="end"
+      class="controls"
+      type="text"
+      placeholder="End"
     />
     <div id="map" style="width:1600px; height:512px"></div>
     <img id="streetView">
@@ -25,6 +31,11 @@
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFgwp8yQqt3Jtj7rm3tlQzvdP6Kadub8I&callback=initAutocomplete&libraries=places&v=weekly"
       defer
     >
-  </script>
+    </script>
+      <script
+      src="https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood&key=AIzaSyDFgwp8yQqt3Jtj7rm3tlQzvdP6Kadub8I"
+      defer
+    >
+    </script>
   </body>
 </html>
