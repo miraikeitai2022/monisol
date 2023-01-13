@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Google Mapsで2地点間の経路を描画するサンプル</title>
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFgwp8yQqt3Jtj7rm3tlQzvdP6Kadub8I"></script>
-
 <link rel="stylesheet" type="text/css" href="./style.css" />
     <script src="./index.js"></script>
 </head>
@@ -23,9 +21,12 @@
   <!--ここでマップ表示-->
   <div id="map_canvas" style="width: 100%; height: 600px;"></div>
   
+  <div id="lat"></div>
+  <div id="lon"></div>
+
   <!--ここでinitAutocomplete-->
   <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFgwp8yQqt3Jtj7rm3tlQzvdP6Kadub8I&callback=initAutocomplete&libraries=places&v=weekly"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuLwc5jRbsVJnoFFxALeAfbwdqNzUWnKo&callback=initAutocomplete&libraries=places&v=weekly"
       defer
     >
   </script>
