@@ -56,8 +56,10 @@ function initAutocomplete()
     const bounds = new google.maps.LatLngBounds();
     ////"LatLngBounds"クラスは境界を作るインスンタンスを作成。引数は左下、右上の座標。
     ////https://lab.syncer.jp/Web/API/Google_Maps/JavaScript/LatLngBounds/#:~:text=LatLngBounds%E3%82%AF%E3%83%A9%E3%82%B9%E3%81%AF%E5%A2%83%E7%95%8C(Bounding,%E4%BD%9C%E3%82%8B%E3%81%93%E3%81%A8%E3%82%82%E3%81%A7%E3%81%8D%E3%81%BE%E3%81%99%E3%80%82
-    places.forEach((place) => {
-      if (!place.geometry) {
+    places.forEach((place) => 
+    {
+      if (!place.geometry) 
+      {
         ////"geometry"はplaceライブラリのメソッド。
 
         console.log("Returned place contains no geometry");
@@ -85,7 +87,8 @@ function initAutocomplete()
         })
       );
 
-      if (place.geometry.viewport) {
+      if (place.geometry.viewport) 
+      {
         ////viewport"メソッド
         // Only geocodes have viewport.
         bounds.union(place.geometry.viewport);
@@ -100,11 +103,7 @@ function initAutocomplete()
     map.fitBounds(bounds);
     ////"fitBounds"メソッドはmapクラスのメソッド。指定した境界を見えやすい位置にビューポートを変更する。
     ////https://lab.syncer.jp/Web/API/Google_Maps/JavaScript/Map/fitBounds/#:~:text=Map.fitBounds()%E3%81%AFMap,%E5%A4%89%E6%9B%B4%E3%81%97%E3%81%A6%E3%81%8F%E3%82%8C%E3%81%BE%E3%81%99%E3%80%82
-
   });
-
-
-
 
   // ルートを取得
   var request = 
@@ -118,3 +117,60 @@ function initAutocomplete()
     directionsRenderer.setMap(map); // ルートを地図に表示
   });
 }
+function getMyPlace() 
+{
+  // HTMLに座標書き込む
+  var out_lat = document.getElementById("lat");
+  var out_lon = document.getElementById("lon");
+
+  if (!navigator.geolocation)
+  {
+    // Geolocation apiがサポートされていない場合
+    //output.innerHTML = "<p>Geolocationはあなたのブラウザーでサポートされておりません</p>";
+    return;
+  }
+  // ジオロケーションに成功した場合
+  function success(position) 
+  {
+    var latitude  = position.coords.latitude;   // 緯度
+    var longitude = position.coords.longitude;  // 経度
+
+    // 位置情報
+    latlng = new google.maps.LatLng( latitude , longitude );
+
+    // HTMLに書き出し
+    out_lat.innerHTML = latitude;
+    out_lon.innerHTML = longitude;
+ 
+    // Google Mapsに書き出し
+    var map = new google.maps.Map( document.getElementById( 'map_canvas' ),
+    {
+        zoom: 15 ,// ズーム値
+        center: latlng ,// 中心座標
+    } ) ;
+    // マーカーの新規出力
+    new google.maps.Marker( {
+      map: map ,
+      position: latlng ,
+    } ) ;
+  };
+  function error() 
+  {
+    //エラーの場合
+    output.innerHTML = "座標位置を取得できません";
+  };
+  navigator.geolocation.getCurrentPosition(success, error);//成功と失敗を判断
+}
+
+window.addEventListener('DOMContentLoaded', function()
+{
+  var interval_id = null;
+
+  interval_id = setInterval(() => 
+  {
+    // 現在位置
+    getMyPlace();
+
+  }, 5000); // 5000ミリ秒ごとに実行
+
+});
