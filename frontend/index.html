@@ -18,6 +18,13 @@
   placeholder="Search Box"
   />
 
+  <!--ここでモード切替-->
+  <div id="mode">mode</div>
+  <div id="sampleButton">
+    <input type="radio" id="radio1" name="radio" onclick="initAutocomplete()">dmode
+    <input type="radio" id="radio2" name="radio" onclick="initAutocomplete()" checked="checked">smode
+  </div>
+
   <!--ここでマップ表示-->
   <div id="map_canvas" style="width: 100%; height: 600px;"></div>
   
